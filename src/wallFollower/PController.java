@@ -8,6 +8,8 @@ public class PController implements UltrasonicController {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int distance;
 	private int filterControl;
+	private int distError;
+	private double correction;
 	
 	public PController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 					   int bandCenter, int bandwidth) {
@@ -21,6 +23,8 @@ public class PController implements UltrasonicController {
 		leftMotor.forward();
 		rightMotor.forward();
 		filterControl = 0;
+		this.distError = 0;
+		this.correction = 1.0;
 	}
 	
 	@Override
@@ -41,8 +45,39 @@ public class PController implements UltrasonicController {
 			this.distance = distance;
 		}
 		
-		// TODO: process a movement based on the us distance passed in (P style)	
+		// TODO: process a movement based on the us distance passed in (P style)
+		
+		this.distance = distance;
+		// TODO: process a movement based on the us distance passed in
+		// (BANG-BANG style)
+		// Sensor on left, wall on left
+		this.distError = bandCenter - distance;
+	
+		if (Math.abs(distError) <= bandwidth) {
+			leftMotor.setSpeed(motorStraight);
+			rightMotor.setSpeed(motorStraight);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else if (this.distance < bandCenter) { // too close
+			correction= 1.0 + distError/40.0;
+			leftMotor.setSpeed((int) (correction*motorStraight));
+			rightMotor.setSpeed(30);
+			leftMotor.forward();
+			rightMotor.backward();
+		} else if (this.distance > bandCenter) { // too far
+			correction= 1.0 + distance/250.0;
+			if(correction>2.0){
+			correction = 1.5;
+			}
+			leftMotor.setSpeed(100);
+			rightMotor.setSpeed((int) (correction*motorStraight));
+		
+			leftMotor.forward();
+			rightMotor.forward();
+		}
+
 	}
+	
 
 	
 	@Override
