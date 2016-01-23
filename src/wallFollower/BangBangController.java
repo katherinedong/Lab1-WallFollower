@@ -17,8 +17,8 @@ public class BangBangController implements UltrasonicController{
 		this.motorHigh = motorHigh;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		leftMotor.setSpeed(motorHigh);				// Start robot moving forward
-		rightMotor.setSpeed(motorHigh);
+		leftMotor.setSpeed(200);				// Start robot moving forward
+		rightMotor.setSpeed(200);
 		leftMotor.forward();
 		rightMotor.forward();
 	}
@@ -27,22 +27,23 @@ public class BangBangController implements UltrasonicController{
 	public void processUSData(int distance) {
 		this.distance = distance;
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
+		//Sensor on left, wall on left
 		this.distError = bandCenter - distance;
 		if (Math.abs(distError)<=bandwidth) {
-			leftMotor.setSpeed(motorHigh);
-			rightMotor.setSpeed(motorHigh);
+			leftMotor.setSpeed(200);
+			rightMotor.setSpeed(200);
 			leftMotor.forward();
 			rightMotor.forward();
 		}
-		else if (distError>0) {
-			leftMotor.setSpeed(motorHigh);
-			rightMotor.setSpeed(motorLow);
+		else if (this.distance<bandCenter) { 				//too close
+			leftMotor.setSpeed(200);
+			rightMotor.setSpeed(50);
 			leftMotor.forward();
-			rightMotor.forward();
+			rightMotor.backward();
 		}
-		else if (distError<0) {
-			leftMotor.setSpeed(motorLow);
-			rightMotor.setSpeed(motorHigh);
+		else if (this.distance>bandCenter) {					 //too far
+			leftMotor.setSpeed(30);
+			rightMotor.setSpeed(130);
 			leftMotor.forward();
 			rightMotor.forward();
 		}
