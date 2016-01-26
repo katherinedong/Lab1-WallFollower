@@ -45,12 +45,24 @@ public class BangBangController implements UltrasonicController {
 		}
 		// Robot too close to the wall
 		else if (this.distance < bandCenter) {
+			
+			// If too close, go backwards
+			if(this.distance<10){
+				leftMotor.setSpeed(motorLow);
+				rightMotor.setSpeed(motorLow);
+				leftMotor.backward();
+				rightMotor.backward();
+			} 
 			// Set motors for the robot to turn right (away from the wall)
-			leftMotor.setSpeed(motorHigh);
-			rightMotor.setSpeed(motorLow);
-			leftMotor.forward();
-			// Right Motor going backwards for sharper turns
-			rightMotor.backward();
+			else {
+				leftMotor.setSpeed(motorHigh);
+				rightMotor.setSpeed(motorLow);
+				leftMotor.forward();
+				// Right Motor going backwards for sharper turns
+				rightMotor.backward();
+			}
+			
+		
 		}
 		// Robot too far from the wall
 		else if (this.distance > bandCenter) {
