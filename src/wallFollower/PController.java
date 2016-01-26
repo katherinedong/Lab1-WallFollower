@@ -67,17 +67,30 @@ public class PController implements UltrasonicController {
 		}
 		// Robot too close to the wall
 		else if (this.distance < bandCenter) {
+
 			// Calculate the correction coefficient
 			// The closer the robot is to the wall, the higher the coefficient
 			// is.
 			correction = 1.0 + distError / 40.0;
-			// Set motors for the robot to turn right (away from the wall)
-			// in proportion to the correction value
-			leftMotor.setSpeed((int) (correction * motorStraight));
-			rightMotor.setSpeed((int) (correction * 30));
-			leftMotor.forward();
-			// Right motor set to turn backwards for sharper turns
-			rightMotor.backward();
+
+			// When the robot is very close to the wall, it
+			// will have a correction greater than 1.75
+			// and it will go backwards instead.
+			if (correction > 1.75) {
+				leftMotor.setSpeed(motorStraight - 150);
+				rightMotor.setSpeed(motorStraight - 150);
+				leftMotor.backward();
+				rightMotor.backward();
+			} else {
+				// Set motors for the robot to turn right (away from the wall)
+				// in proportion to the correction value
+				leftMotor.setSpeed((int) (correction * motorStraight));
+				rightMotor.setSpeed((int) (correction * 30));
+				leftMotor.forward();
+				// Right motor set to turn backwards for sharper turns
+				rightMotor.backward();
+			}
+
 		}
 		// Robot too far from the wall
 		else if (this.distance > bandCenter) {
