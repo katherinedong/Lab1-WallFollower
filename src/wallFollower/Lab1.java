@@ -19,7 +19,7 @@ public class Lab1 {
 	private static final int bandCenter = 40;			// Offset from the wall (cm)
 	private static final int bandWidth = 3;				// Width of dead band (cm)
 	private static final int motorLow = 75;			// Speed of slower rotating wheel (deg/sec)
-	private static final int motorHigh = 200;			// Speed of the faster rotating wheel (deg/sec)
+	private static final int motorHigh = 250;			// Speed of the faster rotating wheel (deg/sec)
 	
 // Static Resources:
 //
